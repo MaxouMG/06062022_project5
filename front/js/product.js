@@ -3,7 +3,7 @@
 
 // La référence de la page URL produits
 console.log(window.location);
-const urlPage = window.location.href
+const urlPage = window.location.href;
 console.log(urlPage);
 
 const url = new URL(urlPage);
@@ -15,51 +15,97 @@ const id = url.searchParams.get("id");
 console.log(id);
 
 
+const urlOrigin = 'http://localhost:3000/api/products'
+const urlChoice = urlOrigin + '/' + id;
+console.log(urlChoice);
 
-fetch('http://localhost:3000/api/products')
+fetch(urlChoice)
      .then(response => {
           // console.log(response);
           return response.json();
      })
      .then((products) => {
-          // mon erreur est au niveau de [0]. Pas de solution
-          const product = products[0];
-          console.log(product);
+          // console.log(products);
+          const myChoice = products;
 
-          let myCouch = document.getElementsByClassName('item');
+          let myCouch = document.querySelector('.item article');
+          // console.log(myCouch);
+          myCouch.innerHTML = `<div class="item__img">          
+                                   <img src="${myChoice.imageUrl}" alt="${myChoice.altTxt}">
+                              </div>
+                              <div class="item__content">
+                                   <div class="item__content__titlePrice">
+                                        <h1 id="title">${myChoice.name}</h1>           
+                                        <p>Prix : <span id="price">${myChoice.price}</span>€</p>                  
+                                   </div>                         
+                                   <div class="item__content__description">
+                                        <p class="item__content__description__title">Description :</p>
+                                        <p id="description">${myChoice.description}</p>                         
+                                   </div>
+                                   <div class="item__content__settings">
+                                        <div class="item__content__settings__color">
+                                             <label for="color-select">Choisir une couleur :</label>
+                                             <select name="color-select" id="colors">
+                                                  <option value="">--SVP, choisissez une couleur --</option>
+                                             </select>
+                                        </div>
+                                        <div class="item__content__settings__quantity">
+                                             <label for="itemQuantity">Nombre d'article(s) (1-100) :</label>
+                                             <input type="number" name="itemQuantity" min="1" max="100" value="0" id="quantity">
+                                        </div>
+                                   </div>
+                                   <div class="item__content__addButton">
+                                        <button id="addToCart">Ajouter au panier</button>
+                                   </div>
+                              </div>`
+
           console.log(myCouch);
 
-          myCouch.innerHTML +=
-               `<article>
-                    <div class="item__img">
-                         <img src="${product.imageUrl}" alt="${product.altTxt}">
-                    </div>
-                    <div class="item__content">
-                         <div class="item__content__titlePrice">
-                              <h1 id="title">${product.name}</h1>           
-                              <p>Prix : <span id="price">${product.price}</span>€</p>                  
-                         </div>
-                         <div class="item__content__description">
-                              <p class="item__content__description__title">Description :</p>
-                              <p id="description">${product.description}</p>                         
-                         </div>
-                         <div class="item__content__settings">
-                              <div class="item__content__settings__color">
-                                   <label for="color-select">Choisir une couleur :</label>
-                                   <select name="color-select" id="colors">
-                                        <option value="">--SVP, choisissez une couleur --</option>
-                                             <option value="bleu">${product.colors[0]}</option>
-                                             <option value="blanc">${product.colors[1]}</option>
-                                             <option value="noir">${product.colors[2]}</option>
-                                   </select>
-                         </div>
-                    </div>
-               </article>
-          `
 
+          // tous les coloris sont "présents" dans la console
+          for (let i = 0; i < myChoice.colors.length; i++) {
+               const myColor = myChoice.colors[i];
+               // console.log(myColor);
+               // tous les coloris sont dans le menu déroulant
+               const color = document.getElementById("colors");
+               color.innerHTML += `<option value="${myColor}">${myColor}</option>`
+          }
+
+          // au clic ajouter au panier
+          const addMyCouch = document.getElementById("addToCart")
+
+          addMyCouch.addEventListener("click", () => {
+               let quantityValue = document.getElementById("quantity").value
+               // console.log(quantityValue);
+               let colorsValue = document.getElementById("colors").value
+               // console.log(colorsValue);
+               const product = {
+                    id: myChoice._id,
+                    quantity: quantityValue,
+                    color: colorsValue,
+                    price: myChoice.price
+               }
+               // console.log(product);
+
+
+               // storage.setItem(nomClé, valeurClé); 
+               // pour placer ma ligne dans le localstorage
+               // localStorage.setItem("basket", JSON.stringify(product));
+
+
+               let nullOrMore = JSON.parse(localStorage.getItem("basket"));
+               console.log(nullOrMore);
+
+               if (nullOrMore) {
+                    nullOrMore.push(product);
+                    localStorage.setItem("basket", JSON.stringify(nullOrMore));
+
+               } else {
+                    nullOrMore = []
+                    nullOrMore.push(product);
+                    localStorage.setItem("basket", JSON.stringify(nullOrMore));
+
+               }
+
+          })
      })
-
-
-
-
-
