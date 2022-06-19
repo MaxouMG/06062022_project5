@@ -73,7 +73,6 @@ fetch(urlChoice)
 
           // au clic ajouter au panier
           const addMyCouch = document.getElementById("addToCart")
-
           addMyCouch.addEventListener("click", () => {
                let quantityValue = document.getElementById("quantity").value
                // console.log(quantityValue);
@@ -85,13 +84,13 @@ fetch(urlChoice)
                     color: colorsValue,
                     price: myChoice.price
                }
-               // console.log(product);
+               console.log(product);
+
 
 
                // storage.setItem(nomClé, valeurClé); 
                // pour placer ma ligne dans le localstorage
                // localStorage.setItem("basket", JSON.stringify(product));
-
 
                let nullOrMore = JSON.parse(localStorage.getItem("basket"));
                console.log(nullOrMore);
@@ -107,5 +106,24 @@ fetch(urlChoice)
 
                }
 
-          })
+
+
+               //gestion des doublons avec .find dans l'array. C'est le but!
+               if (nullOrMore.find(el => el.id === product.id)) {
+                    nullOrMore.find(el => el.color === product.color)
+               } else {
+                    nullOrMore.push(product);
+                    localStorage.setItem("basket", JSON.stringify(nullOrMore));
+               }
+
+               if (nullOrMore.find(el => el.color === product.color)) {
+                    console.log(el += product.quantity);
+                    // réponse de la console: el is not defined
+               } else {
+                    nullOrMore.push(product);
+               }
+               localStorage.setItem("basket", JSON.stringify(nullOrMore));
+
+
+          });
      })
