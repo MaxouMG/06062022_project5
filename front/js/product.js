@@ -98,7 +98,6 @@ fetch(urlChoice)
                if (nullOrMore) {
                     nullOrMore.push(product);
                     localStorage.setItem("basket", JSON.stringify(nullOrMore));
-
                } else {
                     nullOrMore = []
                     nullOrMore.push(product);
@@ -107,22 +106,40 @@ fetch(urlChoice)
                }
 
 
-
                //gestion des doublons avec .find dans l'array. C'est le but!
-               if (nullOrMore.find(el => el.id === product.id)) {
-                    nullOrMore.find(el => el.color === product.color)
-               } else {
-                    nullOrMore.push(product);
+               const sameId = nullOrMore.find(el => el.id === myChoice._id)
+               console.log(sameId);
+               const sameColor = nullOrMore.find(el => el.color === colorsValue)
+               console.log(sameColor);
+
+               fetch(sameId)
+                    .then(sameColor); {
                     localStorage.setItem("basket", JSON.stringify(nullOrMore));
+                    console.log(nullOrMore.push(quantity++));
+                    JSON.parse(localStorage.getItem("basket"));
+
+
                }
 
-               if (nullOrMore.find(el => el.color === product.color)) {
-                    console.log(el += product.quantity);
-                    // réponse de la console: el is not defined
-               } else {
-                    nullOrMore.push(product);
-               }
-               localStorage.setItem("basket", JSON.stringify(nullOrMore));
+               /*
+                              if (sameId) {
+                                   sameColor;
+                              }
+                              if (sameColor) {
+                                   localStorage.setItem("basket", JSON.stringify(nullOrMore));
+                                   console.log(nullOrMore.push(sameColor));
+                                   JSON.parse(localStorage.getItem("basket"));
+               
+                              }
+               
+                              else {
+                                   nullOrMore = []
+                                   nullOrMore.push(product);
+                                   localStorage.setItem("basket", JSON.stringify(nullOrMore));
+               
+                              }
+               
+               */
 
 
           });
