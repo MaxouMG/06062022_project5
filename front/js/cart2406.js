@@ -61,24 +61,14 @@ for (let i = 0; i < nullOrMore.length; i++) {
        */
 
       let basketQuantity = 0;
-      let initPrice = 0;
-      const totalPricePerId = product.quantity * myChoice.price;
-
-      for (let product of nullOrMore) {
-        console.log(product);
-
-        const linePrice = parseInt(totalPricePerId);
-        initPrice += linePrice;
-      }
-
-      console.log(initPrice);
+      const basketPricePerProduct = product.quantity * myChoice.price;
+      console.log(basketPricePerProduct);
 
       for (let product of nullOrMore) {
         //product.quantity est ma valeur chiffrée à parser
         const quantity = parseInt(product.quantity);
         basketQuantity += quantity;
       }
-
       console.log(basketQuantity);
 
       const totallQuantity = document.getElementById("totalQuantity");
