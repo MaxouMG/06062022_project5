@@ -1,6 +1,6 @@
-// Afficher les produits dans le panier
+// Le but est d'afficher les produits dans le panier et de les modifier
 
-// 1. Récupérer les produits du localStorage
+// étape 1: récupérer les produits du localStorage
 
 console.log(window.location);
 const urlPage = window.location.href;
@@ -15,15 +15,15 @@ console.log(urlOrigin);
 let nullOrMore = JSON.parse(localStorage.getItem("basket"));
 console.log(nullOrMore);
 
-// 2. Boucler les produits du localStorage :
+// étape 2: récupérer toutes les données de chaque produit sélectionné
+// choix une boucle avec l'id du produit pour accéder à la fiche produit
 for (let i = 0; i < nullOrMore.length; i++) {
   const product = nullOrMore[i];
   const section = document.getElementById("cart__items");
   const urlChoice = urlOrigin + "/" + product.id;
   console.log(urlChoice);
 
-  //  3. Pour chaque produit du localStorage, faire un fetch permettant l'affichage
-  // de toutes les données du produit sélectionné
+  // étape 3: avec un fetch afficher lisiblement de toutes les données du produit sélectionné
 
   fetch(urlChoice)
     .then((response) => {
@@ -33,7 +33,7 @@ for (let i = 0; i < nullOrMore.length; i++) {
     .then((products) => {
       const myChoice = products;
       console.log(myChoice);
-
+      // insertion dynamique sur la page des données prévues comme photo, quantité, prix
       section.innerHTML += `<article class="cart__item" data-id="${product.id}" data-color="${product.color}">
   <div class="cart__item__img">
     <img src= "${myChoice.imageUrl}" alt="${myChoice.altTxt}">
@@ -56,22 +56,11 @@ for (let i = 0; i < nullOrMore.length; i++) {
   </div>
 </article>`;
 
-      // 4. Calculer le prix total et la quantité totale
-      /* Quantité totale est un id = "totalQuantity" et prix total est un id = "totalPrice"
+      // étape 4: calculer la quantité totale puis le prix total de la commande
+      /* Quantité totale est un id = "totalQuantity"
+       et le prix total est un id = "totalPrice"
        */
-
       let basketQuantity = 0;
-      let initPrice = 0;
-      const totalPricePerId = product.quantity * myChoice.price;
-
-      for (let product of nullOrMore) {
-        console.log(product);
-
-        const linePrice = parseInt(totalPricePerId);
-        initPrice += linePrice;
-      }
-
-      console.log(initPrice);
 
       for (let product of nullOrMore) {
         //product.quantity est ma valeur chiffrée à parser
@@ -84,7 +73,31 @@ for (let i = 0; i < nullOrMore.length; i++) {
       const totallQuantity = document.getElementById("totalQuantity");
       totallQuantity.innerHTML = `${basketQuantity}`;
 
-      /* <span id="totalPrice"><!-- 84,00 --></span> € */
+      let initPrice = 0;
+      totalPrice = [];
+      const totalPricePerId = product.quantity * myChoice.price;
+      console.log(totalPricePerId);
+      const finalPrice = (initPrice += totalPricePerId);
+      console.log(finalPrice);
+
+      for (let product of nullOrMore) {
+        console.log(product);
+        if (finalPrice) {
+          initPrice += totalPricePerId;
+        } else {
+          totalPrice = [];
+          totalPrice.push(totalPricePerId);
+        }
+        totalPrice.push(finalPrice);
+
+        console.log(totalPrice);
+      }
+
+      // là JS boucle sur le même prix par le nombre de lignes de produit
+      //  je voudrais ligne 1/valeur 1 puis ligne 2/valeur1  + valeur 2 ou /valeur1, valeur 2
+
+      const totallPrice = document.getElementById("totalPrice");
+      totallPrice.innerHTML = `${totalPrice}`;
 
       // 4. Créer des fonctions qui permettent de modifier la quantité et supprimer les produits du panier
     });
