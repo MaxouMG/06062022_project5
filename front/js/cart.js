@@ -15,6 +15,9 @@ console.log(urlOrigin);
 let nullOrMore = JSON.parse(localStorage.getItem("basket"));
 console.log(nullOrMore);
 
+let basketQuantity = 0;
+let initPrice = 0;
+
 // étape 2: récupérer toutes les données de chaque produit sélectionné
 // choix une boucle avec l'id du produit pour accéder à la fiche produit
 for (let i = 0; i < nullOrMore.length; i++) {
@@ -60,44 +63,21 @@ for (let i = 0; i < nullOrMore.length; i++) {
       /* Quantité totale est un id = "totalQuantity"
        et le prix total est un id = "totalPrice"
        */
-      let basketQuantity = 0;
 
-      for (let product of nullOrMore) {
-        //product.quantity est ma valeur chiffrée à parser
-        const quantity = parseInt(product.quantity);
-        basketQuantity += quantity;
-      }
-
-      console.log(basketQuantity);
+      const finalQuantity = (basketQuantity += product.quantity);
+      console.log(finalQuantity);
 
       const totallQuantity = document.getElementById("totalQuantity");
-      totallQuantity.innerHTML = `${basketQuantity}`;
+      totallQuantity.innerHTML = `${finalQuantity}`;
 
-      let initPrice = 0;
       totalPrice = [];
       const totalPricePerId = product.quantity * myChoice.price;
       console.log(totalPricePerId);
       const finalPrice = (initPrice += totalPricePerId);
       console.log(finalPrice);
 
-      for (let product of nullOrMore) {
-        console.log(product);
-        if (finalPrice) {
-          initPrice += totalPricePerId;
-        } else {
-          totalPrice = [];
-          totalPrice.push(totalPricePerId);
-        }
-        totalPrice.push(finalPrice);
-
-        console.log(totalPrice);
-      }
-
-      // là JS boucle sur le même prix par le nombre de lignes de produit
-      //  je voudrais ligne 1/valeur 1 puis ligne 2/valeur1  + valeur 2 ou /valeur1, valeur 2
-
       const totallPrice = document.getElementById("totalPrice");
-      totallPrice.innerHTML = `${totalPrice}`;
+      totallPrice.innerHTML = `${finalPrice}`;
 
       // 4. Créer des fonctions qui permettent de modifier la quantité et supprimer les produits du panier
     });
