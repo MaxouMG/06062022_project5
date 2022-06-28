@@ -85,22 +85,23 @@ for (let i = 0; i < nullOrMore.length; i++) {
       /* je partirais sur if/else*/
 
       // supprimer le tout. Dans HTML se nomme class = "deleteItem"
-      const deleteItem = document.getElementById("deleteItem");
-      console.log(deleteItem);
-      deleteItem.addEventListener("click", () => {
-        console.log(product.id);
-
-        // const deleteKanap = document.getElementsByTagName("article");
-        const closestDeleteKanap = deleteItem.closest("article");
+      function removeKanap() {
+        const deleteKanap = document.getElementsByTagName("article");
+        const closestDeleteKanap = deleteKanap.closest("data-id");
         console.log(closestDeleteKanap);
 
-        remove = nullOrMore.filter((p) => p.removeKanap !== product.id);
+        const deleteItem = document.getElementById("deleteItem");
 
-        console.log(remove);
-      });
+        deleteItem.addEventListener("click", () => {
+          remove = nullOrMore.filter(
+            (p) => p.closestDeleteKanap !== product.id
+            // je ne garde que ce qui est strictement différent de l'id du produit
+          );
+        });
+      }
 
-      // const deleteItem = document.getElementById("deleteItem");
-
-      // je ne garde que ce qui est strictement différent de l'id du produit
+      deleteKanap("${product.id}");
+      console.log(remove);
+      console.log(removeKanap);
     });
 }
