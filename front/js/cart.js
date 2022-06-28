@@ -53,11 +53,12 @@ for (let i = 0; i < nullOrMore.length; i++) {
         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value= ${product.quantity}>
       </div>
       <div class="cart__item__content__settings__delete">
-        <p class="deleteItem">Supprimer</p>
+      <p class= "deleteItem" id= "deleteItem">Supprimer</p>
       </div>
     </div>
   </div>
 </article>`;
+      /* en lien avec la suppression totale, j'injecte un id deleteItem)
 
       // étape 4: calculer la quantité totale puis le prix total de la commande
       /* Quantité totale est un id = "totalQuantity"
@@ -80,5 +81,25 @@ for (let i = 0; i < nullOrMore.length; i++) {
       totallPrice.innerHTML = `${finalPrice}`;
 
       // 4. Créer des fonctions qui permettent de modifier la quantité et supprimer les produits du panier
+      // modifier la quantité. Dans HTML c'est input class=itemQuantity
+      /* je partirais sur if/else*/
+
+      // supprimer le tout. Dans HTML se nomme class = "deleteItem"
+      function removeKanap() {
+        const deleteKanap = document.getElementsByTagName("article");
+        const closestDeleteKanap = deleteKanap.closest("data-id");
+        console.log(closestDeleteKanap);
+        const deleteItem = document.getElementById("deleteItem");
+
+        deleteItem.addEventListener("click", () => {
+          remove = nullOrMore.filter(
+            (p) => p.closestDeleteKanap !== product.id
+          );
+          // je ne garde que ce qui est strictement différent de l'id du produit
+        });
+        deleteKanap("${product.id}");
+        console.log(remove);
+      }
+      console.log(removeKanap);
     });
 }
