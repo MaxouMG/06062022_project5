@@ -53,7 +53,7 @@ for (let i = 0; i < nullOrMore.length; i++) {
         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value= ${product.quantity}>
       </div>
       <div class="cart__item__content__settings__delete">
-      <p class= "deleteItem" id= "deleteItem">Supprimer</p>
+      <p class= "deleteItem">Supprimer</p>
       </div>
     </div>
   </div>
@@ -81,26 +81,40 @@ for (let i = 0; i < nullOrMore.length; i++) {
       totallPrice.innerHTML = `${finalPrice}`;
 
       // 4. Créer des fonctions qui permettent de modifier la quantité et supprimer les produits du panier
-      // modifier la quantité. Dans HTML c'est input class=itemQuantity
-      /* je partirais sur if/else*/
+      /* ma première fonction est pour tout supprimer
+La recommandation est la méthode element.closest pour cibler le produit selon id et couleur
+Création d'un nouveau tableau avec filter en excluant le produit concerné
+*/
 
-      // supprimer le tout. Dans HTML se nomme class = "deleteItem"
-      const deleteItem = document.getElementById("deleteItem");
-      console.log(deleteItem);
-      deleteItem.addEventListener("click", () => {
-        console.log(product.id);
-
-        // const deleteKanap = document.getElementsByTagName("article");
-        const closestDeleteKanap = deleteItem.closest("article");
-        console.log(closestDeleteKanap);
-
-        remove = nullOrMore.filter((p) => p.removeKanap !== product.id);
-
-        console.log(remove);
-      });
-
-      // const deleteItem = document.getElementById("deleteItem");
-
-      // je ne garde que ce qui est strictement différent de l'id du produit
+      // 4.9 J'appelle ma fonction
+      deleteKanap();
     });
+}
+// 4.8 j'enferme tout ceci dans une fonction nommée deleteKanap
+function deleteKanap() {
+  // 4.1 deleteItem
+  const deleteItem = document.getElementsByClassName("deleteItem");
+  // console.log(deleteItem);
+  // 4.2 une "série" de deleteItem. autant que de lignes de panier
+  for (let i = 0; i < deleteItem.length; i++) {
+    // 4.5 tout ce nouveau tableau je le veux au clic
+    deleteItem[i].addEventListener("click", () => {
+      const closestDeleteItem = deleteItem[i].closest("article");
+      // 4.2 une "série" de deleteItem. autant que de lignes de panier
+      // console.log(closestDeleteItem);
+      // 4.4 identification du produit par son id et sa couleur (filter)
+      const idProduct = closestDeleteItem.dataset.id;
+      const colorProduct = closestDeleteItem.dataset.color;
+
+      const remove = nullOrMore.filter(
+        (kanap) => idProduct !== kanap.id || colorProduct !== kanap.color
+      );
+      console.log(remove);
+      // 4.6 supprimer aussi du localstorage
+      localStorage.setItem("basket", JSON.stringify(remove));
+      // 4.7 cela s'efface de la console et du localstorage.
+      // MAIS je dois rafraîchir pour que le ligne disparaisse de la page panier
+      window.location.reload();
+    });
+  }
 }
