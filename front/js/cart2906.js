@@ -15,10 +15,6 @@ console.log(urlOrigin);
 let nullOrMore = JSON.parse(localStorage.getItem("basket"));
 console.log(nullOrMore);
 
-// étape 7 retrouver dans un formulaire
-const searchForms = document.forms[0];
-console.log(searchForms);
-
 let basketQuantity = 0;
 let initPrice = 0;
 
@@ -62,10 +58,12 @@ for (let i = 0; i < nullOrMore.length; i++) {
     </div>
   </div>
 </article>`;
+      /* en lien avec la suppression totale, j'injecte un id deleteItem)
 
       // étape 4: calculer la quantité totale puis le prix total de la commande
       /* Quantité totale est un id = "totalQuantity"
-   et le prix total est un id = "totalPrice"*/
+       et le prix total est un id = "totalPrice"
+       */
 
       const finalQuantity = (basketQuantity += product.quantity);
       console.log(finalQuantity);
@@ -82,69 +80,45 @@ for (let i = 0; i < nullOrMore.length; i++) {
       const totallPrice = document.getElementById("totalPrice");
       totallPrice.innerHTML = `${finalPrice}`;
 
+      // 4. Créer des fonctions qui permettent de modifier la quantité et supprimer les produits du panier
       // 4.9 J'appelle ma fonction pour supprimer toute une ligne via le bouton "supprimer"
       deleteKanap();
-      // 6.2 j'appelle ma fonction de modification de l'input itemQuantity
-      modifyQuantity();
     });
 }
 
-// **************************************************************************
-
-/* étape 5 Créer une fonction pour supprimer les produits du panier
+/* ma première fonction est pour tout supprimer
 La recommandation est la méthode element.closest pour cibler le produit selon id et couleur
 Création d'un nouveau tableau avec filter en excluant le produit concerné
 */
-// 5.7 j'enferme tout ceci dans une fonction nommée deleteKanap
+// 4.8 j'enferme tout ceci dans une fonction nommée deleteKanap
 function deleteKanap() {
-  // 5.1 deleteItem
+  // 4.1 deleteItem
   const deleteItem = document.getElementsByClassName("deleteItem");
   // console.log(deleteItem);
-
+  // 4.2 une "série" de deleteItem. autant que de lignes de panier
   for (let i = 0; i < deleteItem.length; i++) {
-    // 5.4 tout ce nouveau tableau je le veux au clic
+    // 4.5 tout ce nouveau tableau je le veux au clic
     deleteItem[i].addEventListener("click", () => {
       const closestDeleteItem = deleteItem[i].closest("article");
-      // 5.2 une "série" de deleteItem. autant que de lignes de panier
+      // 4.2 une "série" de deleteItem. autant que de lignes de panier
       // console.log(closestDeleteItem);
-      // 5.3 identification du produit par son id et sa couleur (filter)
+      // 4.4 identification du produit par son id et sa couleur (filter)
       const idProduct = closestDeleteItem.dataset.id;
       const colorProduct = closestDeleteItem.dataset.color;
 
       const remove = nullOrMore.filter(
-        (el) => idProduct !== el.id || colorProduct !== el.color
+        (kanap) => idProduct !== kanap.id || colorProduct !== kanap.color
       );
       console.log(remove);
-      // 5.5 supprimer aussi du localstorage
+      // 4.6 supprimer aussi du localstorage
       localStorage.setItem("basket", JSON.stringify(remove));
-      // 5.6 cela s'efface de la console et du localstorage.
-      // MAIS je dois rafraîchir pour que la ligne disparaisse de la page panier
+      // 4.7 cela s'efface de la console et du localstorage.
+      // MAIS je dois rafraîchir pour que le ligne disparaisse de la page panier
       window.location.reload();
     });
   }
 }
-/* étape 6 créer une fonction pour modifier la quantité avant validation finale de la commande
-La recommandation est l'évènement de modification input.addEventListener ("change",()) 
-changement de quantité en + et en - */
-/*6.1  La modification de quantité est sous <input  class="itemQuantity">
-  Pour savoir exactement ce qui a été tapé dans un input, le chemin est
-console	  target		value soit (e.target.value)*/
-function modifyQuantity() {
-  const itemQuantity = document.getElementsByClassName("itemQuantity");
-  // let newValue = "";
-
-  for (let i = 0; i < itemQuantity.length; i++) {
-    itemQuantity[i].addEventListener("change", (e) => {
-      const newValue = e.target.value;
-      console.log(newValue);
-
-      const closestItemQuantity = itemQuantity[i].closest("input");
-      console.log(closestItemQuantity);
-      console.log(closestItemQuantity.value);
-
-      // Placer newValue dans closestItemQuantity.value soit: newValue === closestItemQuantity
-      localStorage.setItem("basket", JSON.stringify(closestItemQuantity.value));
-      // réponse du stockage juste le nouveau nombre de valeur. Comment l'intégrer à value?
-    });
-  }
-}
+/* ma deuxième fonction est pour changer la quantité avant vaidation finale de la commande
+La recommandation est l'évènement de modification addEventListener ("change",()) 
+changement de quantité en + et en -
+*/
