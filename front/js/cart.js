@@ -21,6 +21,7 @@ console.log(searchForms);
 
 let basketQuantity = 0;
 let initPrice = 0;
+// let quantity = product.quantity;
 
 // étape 2: récupérer toutes les données de chaque produit sélectionné
 // choix une boucle avec l'id du produit pour accéder à la fiche produit
@@ -86,6 +87,7 @@ for (let i = 0; i < nullOrMore.length; i++) {
       deleteKanap();
       // 6.2 j'appelle ma fonction de modification de l'input itemQuantity
       modifyQuantity();
+      console.log(newValue);
     });
 }
 
@@ -131,20 +133,16 @@ changement de quantité en + et en - */
 console	  target		value soit (e.target.value)*/
 function modifyQuantity() {
   const itemQuantity = document.getElementsByClassName("itemQuantity");
-  // let newValue = "";
+  console.log(itemQuantity);
 
   for (let i = 0; i < itemQuantity.length; i++) {
     itemQuantity[i].addEventListener("change", (e) => {
-      const newValue = e.target.value;
-      console.log(newValue);
-
-      const closestItemQuantity = itemQuantity[i].closest("input");
-      console.log(closestItemQuantity);
-      console.log(closestItemQuantity.value);
-
-      // Placer newValue dans closestItemQuantity.value soit: newValue === closestItemQuantity
-      localStorage.setItem("basket", JSON.stringify(closestItemQuantity.value));
-      // réponse du stockage juste le nouveau nombre de valeur. Comment l'intégrer à value?
+      newValue = e.target.value;
     });
+
+    // localStorage.setItem("basket", JSON.stringify(newValue));
+    // const newfinalQuantity = (panier - quantité en cours += newValue)
+
+    // window.location.reload();
   }
 }
