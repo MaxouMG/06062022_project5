@@ -87,7 +87,6 @@ for (let i = 0; i < nullOrMore.length; i++) {
       deleteKanap();
       // 6.2 j'appelle ma fonction de modification de l'input itemQuantity
       modifyQuantity();
-      console.log(newValue);
     });
 }
 
@@ -138,11 +137,41 @@ function modifyQuantity() {
   for (let i = 0; i < itemQuantity.length; i++) {
     itemQuantity[i].addEventListener("change", (e) => {
       newValue = e.target.value;
+
+      let quantityValue = parseInt(
+        document.getElementsByClassName("itemQuantity").value
+      );
+      console.log(quantityValue);
+      let colorsValue = document.getElementsByName("myChoice").color;
+      console.log(colorsValue);
+
+      const product = {
+        id: myChoice._id,
+        quantity: quantityValue,
+        color: colorsValue,
+      };
+
+      if (nullOrMore) {
+        const newChoice = nullOrMore.find(
+          (el) =>
+            el.id === myChoice._id &&
+            el.color === colorsValue &&
+            el.quantity !== quantityValue
+        );
+        if (newChoice) {
+          newChoice.quantity == newValue;
+        } else {
+          nullOrMore.push(newValue);
+        }
+      } else {
+        nullOrMore = [];
+        nullOrMore.push(newValue);
+      }
+      localStorage.setItem("basket", stringify(nullOrMore));
     });
 
-    // localStorage.setItem("basket", JSON.stringify(newValue));
-    // const newfinalQuantity = (panier - quantité en cours += newValue)
+    // ou alors :  const newfinalQuantity = (panier - quantité en cours += newValue)
 
-    // window.location.reload();
+    // window.location.reload();*/
   }
 }
