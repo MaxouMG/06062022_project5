@@ -30,7 +30,7 @@ fetch(urlChoice)
     // console.log(myCouch);
     myCouch.innerHTML = `<div class="item__img">          
                                    <img src="${myChoice.imageUrl}" alt="${myChoice.altTxt}">
-                              </div>
+                          </div>
                               <div class="item__content">
                                    <div class="item__content__titlePrice">
                                         <h1 id="title">${myChoice.name}</h1>           
@@ -52,9 +52,9 @@ fetch(urlChoice)
                                              <input type="number" name="itemQuantity" min="1" max="100" value="0" id="quantity">
                                         </div>
                                    </div>
-                                   <div class="item__content__addButton">
-                                        <button id="addToCart">Ajouter au panier</button>
-                                   </div>
+                                    <div class="item__content__addButton">
+                                        <a href="./cart.html"> <button id="addToCart">Ajouter au panier</button></a>                                        
+                                    </div>
                               </div>`;
 
     console.log(myCouch);
@@ -69,6 +69,7 @@ fetch(urlChoice)
     }
 
     // au clic ajouter au panier
+
     const addMyCouch = document.getElementById("addToCart");
     addMyCouch.addEventListener("click", () => {
       let quantityValue = parseInt(document.getElementById("quantity").value);

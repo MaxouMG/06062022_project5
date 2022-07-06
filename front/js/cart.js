@@ -21,7 +21,6 @@ console.log(searchForms);
 
 let basketQuantity = 0;
 let initPrice = 0;
-// let quantity = product.quantity;
 
 // étape 2: récupérer toutes les données de chaque produit sélectionné
 // choix une boucle avec l'id du produit pour accéder à la fiche produit
@@ -67,18 +66,26 @@ for (let i = 0; i < nullOrMore.length; i++) {
       // étape 4: calculer la quantité totale puis le prix total de la commande
       /* Quantité totale est un id = "totalQuantity"
    et le prix total est un id = "totalPrice"*/
-
       const finalQuantity = (basketQuantity += product.quantity);
-      console.log(finalQuantity);
+      totalPrice = [];
+      const totalPricePerId = product.quantity * myChoice.price;
+      // console.log(totalPricePerId);
+      const finalPrice = (initPrice += totalPricePerId);
+      // console.log(finalPrice);
+      // 6.4 régularisation si quantité choisie négative
+      if (product.quantity < 0) {
+        alert(
+          "Nous ne pouvons pas prendre en compte votre demande. Le nombre est négatif."
+        );
+      } else {
+        finalQuantity;
+        console.log(finalQuantity);
+        finalPrice;
+        console.log(finalPrice);
+      }
 
       const totallQuantity = document.getElementById("totalQuantity");
       totallQuantity.innerHTML = `${finalQuantity}`;
-
-      totalPrice = [];
-      const totalPricePerId = product.quantity * myChoice.price;
-      console.log(totalPricePerId);
-      const finalPrice = (initPrice += totalPricePerId);
-      console.log(finalPrice);
 
       const totallPrice = document.getElementById("totalPrice");
       totallPrice.innerHTML = `${finalPrice}`;
@@ -87,6 +94,8 @@ for (let i = 0; i < nullOrMore.length; i++) {
       deleteKanap();
       // 6.2 j'appelle ma fonction de modification de l'input itemQuantity
       modifyQuantity();
+      // étape 7 : récupérer  et analyser les données saisies dans le formulaire
+      // cf. ligne 20
     });
 }
 
@@ -132,46 +141,35 @@ changement de quantité en + et en - */
 console	  target		value soit (e.target.value)*/
 function modifyQuantity() {
   const itemQuantity = document.getElementsByClassName("itemQuantity");
-  console.log(itemQuantity);
+  // console.log(itemQuantity);
 
   for (let i = 0; i < itemQuantity.length; i++) {
     itemQuantity[i].addEventListener("change", (e) => {
-      newValue = e.target.value;
-
-      let quantityValue = parseInt(
-        document.getElementsByClassName("itemQuantity").value
-      );
-      console.log(quantityValue);
-      let colorsValue = document.getElementsByName("myChoice").color;
-      console.log(colorsValue);
-
-      const product = {
-        id: myChoice._id,
-        quantity: quantityValue,
-        color: colorsValue,
-      };
+      const newValue = parseInt(e.target.value);
+      console.log(newValue);
+      // 6.2 des propriétés à rechercher pour remplacer l'anciene valeur par la nouvelle
+      const closestItemQuantity = itemQuantity[i].closest("article");
+      const idProduct = closestItemQuantity.dataset.id;
+      console.log(idProduct);
+      const colorProduct = closestItemQuantity.dataset.color;
+      console.log(colorProduct);
+      // et la valeur c'est newValue
 
       if (nullOrMore) {
         const newChoice = nullOrMore.find(
           (el) =>
-            el.id === myChoice._id &&
-            el.color === colorsValue &&
-            el.quantity !== quantityValue
+            el.id === idProduct &&
+            el.color === colorProduct &&
+            el.quantity !== newValue
         );
         if (newChoice) {
-          newChoice.quantity == newValue;
-        } else {
-          nullOrMore.push(newValue);
+          newChoice.quantity = newValue;
         }
-      } else {
-        nullOrMore = [];
-        nullOrMore.push(newValue);
       }
-      localStorage.setItem("basket", stringify(nullOrMore));
+      // 6.3 sauvegarde en localstorage et rafraîchissement de la page
+      localStorage.setItem("basket", JSON.stringify(nullOrMore));
+      window.location.reload();
+      // 6.4 gestion des quantités négatives = remonter dans la page
     });
-
-    // ou alors :  const newfinalQuantity = (panier - quantité en cours += newValue)
-
-    // window.location.reload();*/
   }
 }
