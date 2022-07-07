@@ -15,10 +15,6 @@ console.log(urlOrigin);
 let nullOrMore = JSON.parse(localStorage.getItem("basket"));
 console.log(nullOrMore);
 
-// étape 7 retrouver dans un formulaire
-const searchForms = document.forms[0];
-console.log(searchForms);
-
 let basketQuantity = 0;
 let initPrice = 0;
 
@@ -96,6 +92,8 @@ for (let i = 0; i < nullOrMore.length; i++) {
       modifyQuantity();
       // étape 7 : récupérer  et analyser les données saisies dans le formulaire
       // cf. ligne 20
+      verifyFirstName();
+      verifyLastName();
     });
 }
 
@@ -172,4 +170,71 @@ function modifyQuantity() {
       // 6.4 gestion des quantités négatives = remonter dans la page
     });
   }
+}
+// **************************************************************************
+// étape 7 retrouver dans un formulaire
+const searchForms = document.forms[0];
+console.log(searchForms);
+
+const regexName = /^([^0-9]*)$/;
+// const regexAddress = /^()$/;
+// au lieu de ne vouloir que des lettres. Cela indique aucun chiffre
+
+/* Création d'une fonction modèle pour le formulaire
+
+     <div class="cart__order">
+              <form method="get" class="cart__order__form">
+                <div class="cart__order__form__question">
+
+                <div class="cart__order__form__question">
+                  <label for="address">Adresse: </label>
+                  <input type="text" name="address" id="address" required>
+                  <p id="addressErrorMsg"></p>
+                </div>
+                <div class="cart__order__form__question">
+                  <label for="city">Ville: </label>
+                  <input type="text" name="city" id="city" required>
+                  <p id="cityErrorMsg"></p>
+                </div>
+                <div class="cart__order__form__question">
+                  <label for="email">Email: </label>
+                  <input type="email" name="email" id="email" required>
+                  <p id="emailErrorMsg"></p>
+                </div>
+                <div class="cart__order__form__submit">
+                  <input type="submit" value="Commander !" id="order">
+                </div>
+              </form>
+            </div>
+ */
+// Chaque champ de saisie est sous class="cart__order__form__question"
+function verifyFirstName() {
+  const verifyFirstName = document.getElementById("firstName");
+  // console.log(verifyFirstName);
+  verifyFirstName.addEventListener("change", (e) => {
+    const firstName = e.target.value;
+    console.log(firstName);
+
+    if (firstName.match(regexName)) {
+      return true;
+    } else {
+      const firstNameKO = document.getElementById("firstNameErrorMsg");
+      firstNameKO.innerHTML = `Ceci n'est pas reconnu comme un prénom !`;
+    }
+  });
+}
+function verifyLastName() {
+  const verifyLastName = document.getElementById("lastName");
+  // console.log(verifyLastName);
+  verifyLastName.addEventListener("change", (e) => {
+    const lastName = e.target.value;
+    console.log(lastName);
+
+    if (lastName.match(regexName)) {
+      return true;
+    } else {
+      const lastNameKO = document.getElementById("lastNameErrorMsg");
+      lastNameKO.innerHTML = `Ceci n'est pas reconnu comme un nom !`;
+    }
+  });
 }
