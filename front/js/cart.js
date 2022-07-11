@@ -91,9 +91,14 @@ for (let i = 0; i < nullOrMore.length; i++) {
       // 6.2 j'appelle ma fonction de modification de l'input itemQuantity
       modifyQuantity();
       // étape 7 : récupérer  et analyser les données saisies dans le formulaire
-      // cf. ligne 20
+      const searchForms = document.forms[0];
+      console.log(searchForms);
       verifyFirstName();
       verifyLastName();
+      verifyAddress();
+      verifyCity();
+      verifyEmail();
+      beforeOrder();
     });
 }
 
@@ -173,40 +178,13 @@ function modifyQuantity() {
 }
 // **************************************************************************
 // étape 7 retrouver dans un formulaire
-const searchForms = document.forms[0];
-console.log(searchForms);
 
-const regexName = /^([^0-9]*)$/;
-// const regexAddress = /^()$/;
 // au lieu de ne vouloir que des lettres. Cela indique aucun chiffre
+const regexName = /^([^0-9]*)$/;
+const regexAddress = /^(.*[A-Za-z0-9]+)$/;
+const regexCity = /^(\d{5})(.*[A-Za-z0-9])$/;
+const regexEmail = /^([A-Za-z0-9].[.A-Za-z0-9]*@[a-z]+[.a-z]{2,4})$/;
 
-/* Création d'une fonction modèle pour le formulaire
-
-     <div class="cart__order">
-              <form method="get" class="cart__order__form">
-                <div class="cart__order__form__question">
-
-                <div class="cart__order__form__question">
-                  <label for="address">Adresse: </label>
-                  <input type="text" name="address" id="address" required>
-                  <p id="addressErrorMsg"></p>
-                </div>
-                <div class="cart__order__form__question">
-                  <label for="city">Ville: </label>
-                  <input type="text" name="city" id="city" required>
-                  <p id="cityErrorMsg"></p>
-                </div>
-                <div class="cart__order__form__question">
-                  <label for="email">Email: </label>
-                  <input type="email" name="email" id="email" required>
-                  <p id="emailErrorMsg"></p>
-                </div>
-                <div class="cart__order__form__submit">
-                  <input type="submit" value="Commander !" id="order">
-                </div>
-              </form>
-            </div>
- */
 // Chaque champ de saisie est sous class="cart__order__form__question"
 function verifyFirstName() {
   const verifyFirstName = document.getElementById("firstName");
@@ -219,7 +197,7 @@ function verifyFirstName() {
       return true;
     } else {
       const firstNameKO = document.getElementById("firstNameErrorMsg");
-      firstNameKO.innerHTML = `Ceci n'est pas reconnu comme un prénom !`;
+      firstNameKO.innerHTML = `Pas de chiffre, ni de caractère spécial dans le prénom. Merci`;
     }
   });
 }
@@ -234,7 +212,65 @@ function verifyLastName() {
       return true;
     } else {
       const lastNameKO = document.getElementById("lastNameErrorMsg");
-      lastNameKO.innerHTML = `Ceci n'est pas reconnu comme un nom !`;
+      lastNameKO.innerHTML = `Pas de chiffre, ni de caractère spécial dans le nom. Merci`;
     }
+  });
+}
+function verifyAddress() {
+  const verifyAddress = document.getElementById("address");
+
+  verifyAddress.addEventListener("change", (e) => {
+    const address = e.target.value;
+    console.log(address);
+
+    if (address.match(regexAddress)) {
+      return true;
+    } else {
+      const addressKO = document.getElementById("addressErrorMsg");
+      addressKO.innerHTML = `N'oubliez pas d'écrire une adresse postale! Merci`;
+    }
+  });
+}
+function verifyCity() {
+  const verifyCity = document.getElementById("city");
+
+  verifyCity.addEventListener("change", (e) => {
+    const city = e.target.value;
+    console.log(city);
+
+    if (city.match(regexCity)) {
+      return true;
+    } else {
+      const cityKO = document.getElementById("cityErrorMsg");
+      cityKO.innerHTML = `Un code postal avec 5 chiffres attachés puis le nom de la ville. Merci`;
+    }
+  });
+}
+function verifyEmail() {
+  const verifyEmail = document.getElementById("email");
+
+  verifyEmail.addEventListener("change", (e) => {
+    const email = e.target.value;
+    console.log(email);
+
+    if (email.match(regexEmail)) {
+      return true;
+    } else {
+      const emailKO = document.getElementById("emailErrorMsg");
+      emailKO.innerHTML = `N'oubliez pas votre adresse mail! Merci`;
+    }
+  });
+}
+function beforeOrder() {
+  const order = document.getElementById("order");
+  console.log(order);
+
+  order.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    /*   if (order is ok) {
+      // je ne vois pas encore que placer en condition pour si tout est exact
+      <a href="./confirmation.html"> 
+    }*/
   });
 }
