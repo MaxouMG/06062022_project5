@@ -63,7 +63,7 @@ for (let i = 0; i < nullOrMore.length; i++) {
       /* Quantité totale est un id = "totalQuantity"
    et le prix total est un id = "totalPrice"*/
       const finalQuantity = (basketQuantity += product.quantity);
-      totalPrice = [];
+      // totalPrice = [];
       const totalPricePerId = product.quantity * myChoice.price;
       // console.log(totalPricePerId);
       const finalPrice = (initPrice += totalPricePerId);
@@ -98,7 +98,7 @@ for (let i = 0; i < nullOrMore.length; i++) {
       verifyAddress();
       verifyCity();
       verifyEmail();
-      beforeOrder();
+      // beforeOrder();
     });
 }
 
@@ -178,99 +178,146 @@ function modifyQuantity() {
 }
 // **************************************************************************
 // étape 7 retrouver dans un formulaire
-
-// au lieu de ne vouloir que des lettres. Cela indique aucun chiffre
+// 7.1 les regex
 const regexName = /^([^0-9]*)$/;
-const regexAddress = /^(.*[A-Za-z0-9]+)$/;
-const regexCity = /^(\d{5})(.*[A-Za-z0-9])$/;
-const regexEmail = /^([A-Za-z0-9].[.A-Za-z0-9]*@[a-z]+[.a-z]{2,4})$/;
+const regexAddress = /^(.*[A-Za-z0-9.*à.*é.*è.*ù]+)$/;
+const regexCity = /^(\d{5})(.*[A-Za-z0-9.*à.*é.*è.*ù])$/;
+const regexEmail = /^(\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b)$/;
 
 // Chaque champ de saisie est sous class="cart__order__form__question"
+// 7.2 FirstName vérification (verify) puis validation au "submit (validation)"
 function verifyFirstName() {
   const verifyFirstName = document.getElementById("firstName");
   // console.log(verifyFirstName);
   verifyFirstName.addEventListener("change", (e) => {
     const firstName = e.target.value;
     console.log(firstName);
-
+    const firstNameComment = document.getElementById("firstNameErrorMsg");
     if (firstName.match(regexName)) {
-      return true;
+      firstNameComment.innerHTML = "";
     } else {
-      const firstNameKO = document.getElementById("firstNameErrorMsg");
-      firstNameKO.innerHTML = `Pas de chiffre, ni de caractère spécial dans le prénom. Merci`;
+      firstNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le prénom. Merci`;
     }
   });
+  return true;
 }
+
+function validationFirstName() {
+  if (verifyFirstName(true)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+// 7.3 Idem pour lastName, address, city et email
 function verifyLastName() {
   const verifyLastName = document.getElementById("lastName");
-  // console.log(verifyLastName);
   verifyLastName.addEventListener("change", (e) => {
     const lastName = e.target.value;
     console.log(lastName);
-
+    const lastNameComment = document.getElementById("lastNameErrorMsg");
     if (lastName.match(regexName)) {
-      return true;
+      lastNameComment.innerHTML = "";
     } else {
-      const lastNameKO = document.getElementById("lastNameErrorMsg");
-      lastNameKO.innerHTML = `Pas de chiffre, ni de caractère spécial dans le nom. Merci`;
+      lastNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le nom. Merci`;
     }
   });
+  return true;
 }
+
+function validationLastName() {
+  if (verifyLastName(true)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function verifyAddress() {
   const verifyAddress = document.getElementById("address");
-
   verifyAddress.addEventListener("change", (e) => {
     const address = e.target.value;
     console.log(address);
-
+    const addressComment = document.getElementById("addressErrorMsg");
     if (address.match(regexAddress)) {
-      return true;
+      addressComment.innerHTML = "";
     } else {
-      const addressKO = document.getElementById("addressErrorMsg");
-      addressKO.innerHTML = `N'oubliez pas d'écrire une adresse postale! Merci`;
+      addressComment.innerHTML = `N'oubliez pas d'écrire une adresse postale! Merci`;
     }
   });
+  return true;
 }
+function validationAddress() {
+  if (verifyAddress(true)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function verifyCity() {
   const verifyCity = document.getElementById("city");
-
   verifyCity.addEventListener("change", (e) => {
     const city = e.target.value;
     console.log(city);
-
+    const cityComment = document.getElementById("cityErrorMsg");
     if (city.match(regexCity)) {
-      return true;
+      cityComment.innerHTML = "";
     } else {
-      const cityKO = document.getElementById("cityErrorMsg");
-      cityKO.innerHTML = `Un code postal avec 5 chiffres attachés puis le nom de la ville. Merci`;
+      cityComment.innerHTML = `Un code postal avec 5 chiffres attachés puis le nom de la ville. Merci`;
     }
   });
+  return true;
 }
+
+function validationCity() {
+  if (verifyCity(true)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function verifyEmail() {
   const verifyEmail = document.getElementById("email");
-
   verifyEmail.addEventListener("change", (e) => {
     const email = e.target.value;
     console.log(email);
-
+    const emailComment = document.getElementById("emailErrorMsg");
     if (email.match(regexEmail)) {
-      return true;
+      emailComment.innerHTML = "";
     } else {
-      const emailKO = document.getElementById("emailErrorMsg");
-      emailKO.innerHTML = `N'oubliez pas votre adresse mail! Merci`;
+      emailComment.innerHTML = `N'oubliez pas votre adresse mail! Merci`;
     }
   });
+  return true;
 }
-function beforeOrder() {
-  const order = document.getElementById("order");
-  console.log(order);
+function validationEmail() {
+  if (verifyEmail(true)) {
+    console.log("OK");
+    return true;
+  } else {
+    return false;
+  }
+}
 
+function beforeOrder() {
+  const order = document.querySelector(".cart__order__form");
+  console.log(order);
   order.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    /*   if (order is ok) {
-      // je ne vois pas encore que placer en condition pour si tout est exact
-      <a href="./confirmation.html"> 
-    }*/
+    if (
+      validationFirstName() &&
+      validationLastName() &&
+      validationAddress() &&
+      validationCity() &&
+      validationEmail()
+    ) {
+      window.location.href = "./confirmation.html";
+    }
   });
+  return true;
 }
+//Au bouton commandr pas le bon location href
+// Location http://127.0.0.1:5500/front/html/cart.html?firstName=Fr%C3%A9d%C3%A9ric&lastName=Dupont&address=22+bd+des+initi%C3%A9s&city=44852+R%C3%A9z%C3%A9&email=anbe%40monadresse.fr
