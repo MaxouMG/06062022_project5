@@ -98,7 +98,7 @@ for (let i = 0; i < nullOrMore.length; i++) {
       verifyAddress();
       verifyCity();
       verifyEmail();
-      // beforeOrder();
+      beforeOrder();
     });
 }
 
@@ -294,7 +294,6 @@ function verifyEmail() {
 }
 function validationEmail() {
   if (verifyEmail(true)) {
-    console.log("OK");
     return true;
   } else {
     return false;
@@ -306,7 +305,6 @@ function beforeOrder() {
   console.log(order);
   order.addEventListener("submit", (e) => {
     e.preventDefault();
-
     if (
       validationFirstName() &&
       validationLastName() &&
@@ -316,8 +314,6 @@ function beforeOrder() {
     ) {
       window.location.href = "./confirmation.html";
     }
+    return true;
   });
-  return true;
 }
-//Au bouton commandr pas le bon location href
-// Location http://127.0.0.1:5500/front/html/cart.html?firstName=Fr%C3%A9d%C3%A9ric&lastName=Dupont&address=22+bd+des+initi%C3%A9s&city=44852+R%C3%A9z%C3%A9&email=anbe%40monadresse.fr
