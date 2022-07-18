@@ -199,10 +199,11 @@ function verifyFirstName() {
       firstNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le prénom. Merci`;
     }
   });
+  return true;
 }
 
 function validationFirstName() {
-  if (verifyFirstName()) {
+  if (verifyFirstName(true)) {
     return true;
   } else {
     return false;
@@ -285,12 +286,11 @@ function verifyEmail() {
     const emailComment = document.getElementById("emailErrorMsg");
     if (email.match(regexEmail)) {
       emailComment.innerHTML = "";
-      return true;
     } else {
       emailComment.innerHTML = `N'oubliez pas votre adresse mail! Merci`;
-      return false;
     }
   });
+  return true;
 }
 function validationEmail() {
   if (verifyEmail(true)) {
@@ -307,22 +307,22 @@ function beforeOrder() {
   order.addEventListener("submit", (e) => {
     e.preventDefault();
     if (
-      validationFirstName(true) &&
-      validationLastName(true) &&
-      validationAddress(true) &&
-      validationCity(true) &&
-      validationEmail(true)
+      validationFirstName() &&
+      validationLastName() &&
+      validationAddress() &&
+      validationCity() &&
+      validationEmail()
     ) {
       beforeConfirmation();
       window.location.href = "./confirmation.html";
     }
+
     /*la commande passe en cas d'erreur!*/
     function beforeConfirmation() {
       for (let i = 0; i < nullOrMore.length; i++) {
         const table = nullOrMore[i].id;
         console.log(table);
       }
-      return true;
     }
     // table n'est pas reconnu hors beforeConfirmation()
     const contact = {
