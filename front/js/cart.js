@@ -199,11 +199,10 @@ function verifyFirstName() {
       firstNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le prénom. Merci`;
     }
   });
-  return true;
 }
 
 function validationFirstName() {
-  if (verifyFirstName(true)) {
+  if (verifyFirstName()) {
     return true;
   } else {
     return false;
@@ -286,11 +285,12 @@ function verifyEmail() {
     const emailComment = document.getElementById("emailErrorMsg");
     if (email.match(regexEmail)) {
       emailComment.innerHTML = "";
+      return true;
     } else {
       emailComment.innerHTML = `N'oubliez pas votre adresse mail! Merci`;
+      return false;
     }
   });
-  return true;
 }
 function validationEmail() {
   if (verifyEmail(true)) {
@@ -303,17 +303,52 @@ function validationEmail() {
 function beforeOrder() {
   const order = document.querySelector(".cart__order__form");
   console.log(order);
+
   order.addEventListener("submit", (e) => {
     e.preventDefault();
     if (
-      validationFirstName() &&
-      validationLastName() &&
-      validationAddress() &&
-      validationCity() &&
-      validationEmail()
+      validationFirstName(true) &&
+      validationLastName(true) &&
+      validationAddress(true) &&
+      validationCity(true) &&
+      validationEmail(true)
     ) {
+      beforeConfirmation();
       window.location.href = "./confirmation.html";
     }
-    return true;
+    /*la commande passe en cas d'erreur!*/
+    function beforeConfirmation() {
+      for (let i = 0; i < nullOrMore.length; i++) {
+        const table = nullOrMore[i].id;
+        console.log(table);
+      }
+      return true;
+    }
+    // table n'est pas reconnu hors beforeConfirmation()
+    const contact = {
+      firstName: document.getElementById("firstName").value,
+      lastName: document.getElementById("lastName").value,
+      address: document.getElementById("address").value,
+      city: document.getElementById("city").value,
+      email: document.getElementById("email").value,
+    };
+    console.log(contact);
+
+    // 7.3 méthode fetch post pour id de commande dans l'URL
+    // pour l'istant pas de tabel dans fetch en data et pas de num de commande
+    fetch(urlOrigin, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(contact),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   });
 }
