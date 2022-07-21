@@ -68,11 +68,16 @@ for (let i = 0; i < nullOrMore.length; i++) {
       // console.log(totalPricePerId);
       const finalPrice = (initPrice += totalPricePerId);
       // console.log(finalPrice);
-      // 6.4 régularisation si quantité choisie négative
-      if (product.quantity < 0) {
+      // 6.4 régularisation si quantité choisie inférieure à 1
+
+      if (product.quantity < 1) {
         alert(
-          "Nous ne pouvons pas prendre en compte votre demande. Le nombre est négatif."
+          "Attention! Il y a moins d'un produit dans cette ligne, elle va être effacée."
         );
+        const remove = nullOrMore.filter((el) => product !== el);
+        console.log(remove);
+        localStorage.setItem("basket", JSON.stringify(remove));
+        window.location.reload();
       } else {
         finalQuantity;
         console.log(finalQuantity);
@@ -98,9 +103,9 @@ for (let i = 0; i < nullOrMore.length; i++) {
       verifyAddress();
       verifyCity();
       verifyEmail();
-      beforeOrder();
     });
 }
+beforeOrder();
 
 // **************************************************************************
 
@@ -199,11 +204,11 @@ function verifyFirstName() {
       firstNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le prénom. Merci`;
     }
   });
-  return true;
 }
 
 function validationFirstName() {
-  if (verifyFirstName(true)) {
+  const firstName = document.getElementById("firstName").value;
+  if (firstName.match(regexName)) {
     return true;
   } else {
     return false;
@@ -222,11 +227,11 @@ function verifyLastName() {
       lastNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le nom. Merci`;
     }
   });
-  return true;
 }
 
 function validationLastName() {
-  if (verifyLastName(true)) {
+  const lastName = document.getElementById("lastName");
+  if (lastName.match(regexName)) {
     return true;
   } else {
     return false;
@@ -245,10 +250,10 @@ function verifyAddress() {
       addressComment.innerHTML = `N'oubliez pas d'écrire une adresse postale! Merci`;
     }
   });
-  return true;
 }
 function validationAddress() {
-  if (verifyAddress(true)) {
+  const address = document.getElementById("addressErrorMsg");
+  if (address.match(regexAddress)) {
     return true;
   } else {
     return false;
@@ -267,11 +272,10 @@ function verifyCity() {
       cityComment.innerHTML = `Un code postal avec 5 chiffres attachés puis le nom de la ville. Merci`;
     }
   });
-  return true;
 }
-
 function validationCity() {
-  if (verifyCity(true)) {
+  const city = document.getElementById("city");
+  if (city.match(regexCity)) {
     return true;
   } else {
     return false;
@@ -290,10 +294,10 @@ function verifyEmail() {
       emailComment.innerHTML = `N'oubliez pas votre adresse mail! Merci`;
     }
   });
-  return true;
 }
 function validationEmail() {
-  if (verifyEmail(true)) {
+  const email = document.getElementById("email");
+  if (email.match(regexEmail)) {
     return true;
   } else {
     return false;
@@ -303,7 +307,7 @@ function validationEmail() {
 function beforeOrder() {
   const order = document.querySelector(".cart__order__form");
   console.log(order);
-
+  // nullOrMore.length pour ne pas répéter l'action à chaque article
   order.addEventListener("submit", (e) => {
     e.preventDefault();
     if (
@@ -311,20 +315,24 @@ function beforeOrder() {
       validationLastName() &&
       validationAddress() &&
       validationCity() &&
-      validationEmail()
+      validationEmail() &&
+      nullOrMore.length
     ) {
       beforeConfirmation();
-      window.location.href = "./confirmation.html";
+    } else {
+      return false;
     }
 
-    /*la commande passe en cas d'erreur!*/
     function beforeConfirmation() {
       for (let i = 0; i < nullOrMore.length; i++) {
         const table = nullOrMore[i].id;
         console.log(table);
       }
     }
-    // table n'est pas reconnu hors beforeConfirmation()
+
+    // 7.3 méthode fetch post pour id de commande dans l'URL
+    // Etape 1 : créer les valeurs à passer
+
     const contact = {
       firstName: document.getElementById("firstName").value,
       lastName: document.getElementById("lastName").value,
@@ -333,19 +341,21 @@ function beforeOrder() {
       email: document.getElementById("email").value,
     };
     console.log(contact);
-
-    // 7.3 méthode fetch post pour id de commande dans l'URL
-    // pour l'istant pas de tabel dans fetch en data et pas de num de commande
-    fetch(urlOrigin, {
+    // Etape 2 : récupérer des id seules
+    const products = nullOrMore.map((el) => el.id);
+    console.log(products);
+    // Etape 3 : le fetch post pour envoyer sur la page confirmtion
+    fetch(urlOrigin + "/order", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify(contact),
+      body: JSON.stringify({ contact, products }),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        window.location.href = "./confirmation.html?orderId=" + data.orderId;
       })
       .catch((error) => {
         console.error("Error:", error);

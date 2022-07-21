@@ -3,4 +3,20 @@
 /* Dans confirmation.html
 <span id="orderId"><!-- 65431343444684674 --></span>
 */
-/* for (let i = 0; i < orderId.length; i++) {}  ou addEventListener à l'arrivée sur la page*/
+// La référence de la page URL produits
+console.log(window.location);
+const urlPage = window.location.href;
+console.log(urlPage);
+
+const url = new URL(urlPage);
+console.log(url);
+
+// Attention à bien utiliser URLSearchParams pour passer l’id
+// d’une page à une autre
+const orderId = url.searchParams.get("orderId");
+console.log(orderId);
+
+const number = document.getElementById("orderId");
+number.innerHTML = orderId;
+// Pour effacer le panier après num de commande
+localStorage.clear();
