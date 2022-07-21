@@ -16,6 +16,8 @@ console.log(url);
 const orderId = url.searchParams.get("orderId");
 console.log(orderId);
 
+document.getElementById("orderId").style.color = "rgb(80, 5, 17)";
+document.getElementById("orderId").style.fontWeight = "bold";
 const number = document.getElementById("orderId");
 number.innerHTML = orderId;
 // Pour effacer le panier après num de commande

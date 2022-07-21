@@ -184,9 +184,9 @@ function modifyQuantity() {
 // **************************************************************************
 // étape 7 retrouver dans un formulaire
 // 7.1 les regex
-const regexName = /^([^0-9]*)$/;
-const regexAddress = /^(.*[A-Za-z0-9.*à.*é.*è.*ù]+)$/;
-const regexCity = /^(\d{5})(.*[A-Za-z0-9.*à.*é.*è.*ù])$/;
+const regexName = /^(.*[A-Za-z.*à.*é.*è.*ù.*ï.*ë])$/;
+const regexAddress = /^(.*[A-Za-z0-9.*à.*é.*è.*ù.*ï.*ë]+)$/;
+const regexCity = /^(\d{5})(.*[A-Za-z0-9.*à.*é.*è.*ù.*ï.*ë])$/;
 const regexEmail = /^(\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b)$/;
 
 // Chaque champ de saisie est sous class="cart__order__form__question"
@@ -197,11 +197,13 @@ function verifyFirstName() {
   verifyFirstName.addEventListener("change", (e) => {
     const firstName = e.target.value;
     console.log(firstName);
+    document.getElementById("firstNameErrorMsg").style.color = "rgb(80, 5, 17)";
+    document.getElementById("firstNameErrorMsg").style.fontStyle = "italic";
     const firstNameComment = document.getElementById("firstNameErrorMsg");
     if (firstName.match(regexName)) {
       firstNameComment.innerHTML = "";
     } else {
-      firstNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le prénom. Merci`;
+      firstNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le prénom, SVP. Merci :)`;
     }
   });
 }
@@ -220,17 +222,19 @@ function verifyLastName() {
   verifyLastName.addEventListener("change", (e) => {
     const lastName = e.target.value;
     console.log(lastName);
+    document.getElementById("lastNameErrorMsg").style.color = "rgb(80, 5, 17)";
+    document.getElementById("lastNameErrorMsg").style.fontStyle = "italic";
     const lastNameComment = document.getElementById("lastNameErrorMsg");
     if (lastName.match(regexName)) {
       lastNameComment.innerHTML = "";
     } else {
-      lastNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le nom. Merci`;
+      lastNameComment.innerHTML = `Pas de chiffre, ni de caractère spécial dans le nom, SVP. Merci :)`;
     }
   });
 }
 
 function validationLastName() {
-  const lastName = document.getElementById("lastName");
+  const lastName = document.getElementById("lastName").value;
   if (lastName.match(regexName)) {
     return true;
   } else {
@@ -243,6 +247,8 @@ function verifyAddress() {
   verifyAddress.addEventListener("change", (e) => {
     const address = e.target.value;
     console.log(address);
+    document.getElementById("addressErrorMsg").style.color = "rgb(80, 5, 17)";
+    document.getElementById("addressErrorMsg").style.fontStyle = "italic";
     const addressComment = document.getElementById("addressErrorMsg");
     if (address.match(regexAddress)) {
       addressComment.innerHTML = "";
@@ -252,7 +258,7 @@ function verifyAddress() {
   });
 }
 function validationAddress() {
-  const address = document.getElementById("addressErrorMsg");
+  const address = document.getElementById("address").value;
   if (address.match(regexAddress)) {
     return true;
   } else {
@@ -265,16 +271,18 @@ function verifyCity() {
   verifyCity.addEventListener("change", (e) => {
     const city = e.target.value;
     console.log(city);
+    document.getElementById("cityErrorMsg").style.color = "rgb(80, 5, 17)";
+    document.getElementById("cityErrorMsg").style.fontStyle = "italic";
     const cityComment = document.getElementById("cityErrorMsg");
     if (city.match(regexCity)) {
       cityComment.innerHTML = "";
     } else {
-      cityComment.innerHTML = `Un code postal avec 5 chiffres attachés puis le nom de la ville. Merci`;
+      cityComment.innerHTML = `Un code postal avec 5 chiffres attachés puis le nom de la ville, SVP. Merci :)`;
     }
   });
 }
 function validationCity() {
-  const city = document.getElementById("city");
+  const city = document.getElementById("city").value;
   if (city.match(regexCity)) {
     return true;
   } else {
@@ -287,16 +295,18 @@ function verifyEmail() {
   verifyEmail.addEventListener("change", (e) => {
     const email = e.target.value;
     console.log(email);
+    document.getElementById("emailErrorMsg").style.color = "rgb(80, 5, 17)";
+    document.getElementById("emailErrorMsg").style.fontStyle = "italic";
     const emailComment = document.getElementById("emailErrorMsg");
     if (email.match(regexEmail)) {
       emailComment.innerHTML = "";
     } else {
-      emailComment.innerHTML = `N'oubliez pas votre adresse mail! Merci`;
+      emailComment.innerHTML = `N'oubliez pas votre adresse mail, SVP ! Merci :)`;
     }
   });
 }
 function validationEmail() {
-  const email = document.getElementById("email");
+  const email = document.getElementById("email").value;
   if (email.match(regexEmail)) {
     return true;
   } else {
