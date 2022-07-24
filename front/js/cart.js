@@ -1,10 +1,11 @@
-// Le but est d'afficher les produits dans le panier et de les modifier
+// Le but : afficher les produits dans le panier et de les modifier
 
-// étape 1: récupérer les produits du localStorage
+// étape 1: les variables - URLs, inscription dans localstorage
+// quantité initiale, prix initial
 
-console.log(window.location);
+// console.log(window.location);
 const urlPage = window.location.href;
-console.log(urlPage);
+// console.log(urlPage);
 
 const url = new URL(urlPage);
 console.log(url);
@@ -19,14 +20,14 @@ let basketQuantity = 0;
 let initPrice = 0;
 
 // étape 2: récupérer toutes les données de chaque produit sélectionné
-// choix une boucle avec l'id du produit pour accéder à la fiche produit
+// boucle avec l'id du produit pour accéder à la fiche produit
 for (let i = 0; i < nullOrMore.length; i++) {
   const product = nullOrMore[i];
   const section = document.getElementById("cart__items");
   const urlChoice = urlOrigin + "/" + product.id;
   console.log(urlChoice);
 
-  // étape 3: avec un fetch afficher lisiblement de toutes les données du produit sélectionné
+  // étape 3: afficher lisiblement toutes les données du produit sélectionné
 
   fetch(urlChoice)
     .then((response) => {
@@ -36,7 +37,7 @@ for (let i = 0; i < nullOrMore.length; i++) {
     .then((products) => {
       const myChoice = products;
       console.log(myChoice);
-      // insertion dynamique sur la page des données prévues comme photo, quantité, prix
+      // insertion des données prévues comme photo, quantité, prix
       section.innerHTML += `<article class="cart__item" data-id="${product.id}" data-color="${product.color}">
   <div class="cart__item__img">
     <img src= "${myChoice.imageUrl}" alt="${myChoice.altTxt}">
@@ -60,22 +61,18 @@ for (let i = 0; i < nullOrMore.length; i++) {
 </article>`;
 
       // étape 4: calculer la quantité totale puis le prix total de la commande
-      /* Quantité totale est un id = "totalQuantity"
-   et le prix total est un id = "totalPrice"*/
       const finalQuantity = (basketQuantity += product.quantity);
-      // totalPrice = [];
       const totalPricePerId = product.quantity * myChoice.price;
       // console.log(totalPricePerId);
       const finalPrice = (initPrice += totalPricePerId);
       // console.log(finalPrice);
-      // 6.4 régularisation si quantité choisie inférieure à 1
 
+      // 6.4 gestion des quantités nulles et négatives
       if (product.quantity < 1) {
         alert(
           "Attention! Il y a moins d'un produit dans cette ligne, elle va être effacée."
         );
         const remove = nullOrMore.filter((el) => product !== el);
-        console.log(remove);
         localStorage.setItem("basket", JSON.stringify(remove));
         window.location.reload();
       } else {
@@ -91,7 +88,7 @@ for (let i = 0; i < nullOrMore.length; i++) {
       const totallPrice = document.getElementById("totalPrice");
       totallPrice.innerHTML = `${finalPrice}`;
 
-      // 4.9 J'appelle ma fonction pour supprimer toute une ligne via le bouton "supprimer"
+      // 4.9 J'appelle ma fonction pour supprimer toute une ligne via le bouton "Supprimer"
       deleteKanap();
       // 6.2 j'appelle ma fonction de modification de l'input itemQuantity
       modifyQuantity();
@@ -105,64 +102,59 @@ for (let i = 0; i < nullOrMore.length; i++) {
       verifyEmail();
     });
 }
+// passage de la page panier à la page confirmation
 beforeOrder();
 
 // **************************************************************************
 
-/* étape 5 Créer une fonction pour supprimer les produits du panier
-La recommandation est la méthode element.closest pour cibler le produit selon id et couleur
-Création d'un nouveau tableau avec filter en excluant le produit concerné
-*/
+// étape 5 Créer une fonction pour supprimer les produits du panier
+
 // 5.7 j'enferme tout ceci dans une fonction nommée deleteKanap
 function deleteKanap() {
   // 5.1 deleteItem
   const deleteItem = document.getElementsByClassName("deleteItem");
-  // console.log(deleteItem);
 
   for (let i = 0; i < deleteItem.length; i++) {
     // 5.4 tout ce nouveau tableau je le veux au clic
     deleteItem[i].addEventListener("click", () => {
-      const closestDeleteItem = deleteItem[i].closest("article");
       // 5.2 une "série" de deleteItem. autant que de lignes de panier
-      // console.log(closestDeleteItem);
-      // 5.3 identification du produit par son id et sa couleur (filter)
+      const closestDeleteItem = deleteItem[i].closest("article");
+      // 5.3 identification du produit par son id et sa couleur
       const idProduct = closestDeleteItem.dataset.id;
       const colorProduct = closestDeleteItem.dataset.color;
-
+      // re création d'un tableau excluant le produit à supprimer
       const remove = nullOrMore.filter(
         (el) => idProduct !== el.id || colorProduct !== el.color
       );
       console.log(remove);
-      // 5.5 supprimer aussi du localstorage
+      // 5.5 suppression du localstorage
       localStorage.setItem("basket", JSON.stringify(remove));
-      // 5.6 cela s'efface de la console et du localstorage.
-      // MAIS je dois rafraîchir pour que la ligne disparaisse de la page panier
+      // 5.6 rechargement de la page
       window.location.reload();
     });
   }
 }
-/* étape 6 créer une fonction pour modifier la quantité avant validation finale de la commande
-La recommandation est l'évènement de modification input.addEventListener ("change",()) 
-changement de quantité en + et en - */
-/*6.1  La modification de quantité est sous <input  class="itemQuantity">
-  Pour savoir exactement ce qui a été tapé dans un input, le chemin est
-console	  target		value soit (e.target.value)*/
+
+// **************************************************************************
+
+// étape 6 créer une fonction pour modifier la quantité avant la validation finale
+// de la commande
+// 6.1  La modification de quantité
+
 function modifyQuantity() {
   const itemQuantity = document.getElementsByClassName("itemQuantity");
-  // console.log(itemQuantity);
 
   for (let i = 0; i < itemQuantity.length; i++) {
     itemQuantity[i].addEventListener("change", (e) => {
+      /*Pour savoir exactement ce qui a été tapé dans un input, le chemin est
+console	  target		value soit (e.target.value)*/
       const newValue = parseInt(e.target.value);
       console.log(newValue);
-      // 6.2 des propriétés à rechercher pour remplacer l'anciene valeur par la nouvelle
+
       const closestItemQuantity = itemQuantity[i].closest("article");
       const idProduct = closestItemQuantity.dataset.id;
-      console.log(idProduct);
       const colorProduct = closestItemQuantity.dataset.color;
-      console.log(colorProduct);
-      // et la valeur c'est newValue
-
+      // 6.2 création d'un tableau l'id, la couleur et la valeur modifiée manuellement
       if (nullOrMore) {
         const newChoice = nullOrMore.find(
           (el) =>
@@ -177,11 +169,14 @@ function modifyQuantity() {
       // 6.3 sauvegarde en localstorage et rafraîchissement de la page
       localStorage.setItem("basket", JSON.stringify(nullOrMore));
       window.location.reload();
-      // 6.4 gestion des quantités négatives = remonter dans la page
+      // 6.4 gestion des quantités nulles et négatives = remonter dans la page
+      // ligne 70
     });
   }
 }
+
 // **************************************************************************
+
 // étape 7 retrouver dans un formulaire
 // 7.1 les regex
 const regexName = /^(.*[A-Za-z.*à.*é.*è.*ù.*ï.*ë])$/;
@@ -189,14 +184,14 @@ const regexAddress = /^(.*[A-Za-z0-9.*à.*é.*è.*ù.*ï.*ë]+)$/;
 const regexCity = /^(\d{5})(.*[A-Za-z0-9.*à.*é.*è.*ù.*ï.*ë])$/;
 const regexEmail = /^(\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b)$/;
 
-// Chaque champ de saisie est sous class="cart__order__form__question"
 // 7.2 FirstName vérification (verify) puis validation au "submit (validation)"
 function verifyFirstName() {
   const verifyFirstName = document.getElementById("firstName");
-  // console.log(verifyFirstName);
   verifyFirstName.addEventListener("change", (e) => {
     const firstName = e.target.value;
     console.log(firstName);
+    // changement de la couleur et du style en cas d'erreur
+    // pour une meilleure accessibilité
     document.getElementById("firstNameErrorMsg").style.color = "rgb(80, 5, 17)";
     document.getElementById("firstNameErrorMsg").style.fontStyle = "italic";
     const firstNameComment = document.getElementById("firstNameErrorMsg");
@@ -216,6 +211,7 @@ function validationFirstName() {
     return false;
   }
 }
+
 // 7.3 Idem pour lastName, address, city et email
 function verifyLastName() {
   const verifyLastName = document.getElementById("lastName");
@@ -257,6 +253,7 @@ function verifyAddress() {
     }
   });
 }
+
 function validationAddress() {
   const address = document.getElementById("address").value;
   if (address.match(regexAddress)) {
@@ -281,6 +278,7 @@ function verifyCity() {
     }
   });
 }
+
 function validationCity() {
   const city = document.getElementById("city").value;
   if (city.match(regexCity)) {
@@ -305,6 +303,7 @@ function verifyEmail() {
     }
   });
 }
+
 function validationEmail() {
   const email = document.getElementById("email").value;
   if (email.match(regexEmail)) {
@@ -316,9 +315,9 @@ function validationEmail() {
 
 function beforeOrder() {
   const order = document.querySelector(".cart__order__form");
-  console.log(order);
-  // nullOrMore.length pour ne pas répéter l'action à chaque article
+
   order.addEventListener("submit", (e) => {
+    // éviter le rechargement automatique de la page
     e.preventDefault();
     if (
       validationFirstName() &&
@@ -326,6 +325,7 @@ function beforeOrder() {
       validationAddress() &&
       validationCity() &&
       validationEmail() &&
+      // nullOrMore.length pour ne pas répéter l'action à chaque article
       nullOrMore.length
     ) {
       beforeConfirmation();
@@ -341,8 +341,7 @@ function beforeOrder() {
     }
 
     // 7.3 méthode fetch post pour id de commande dans l'URL
-    // Etape 1 : créer les valeurs à passer
-
+    // 7.3.1 : créer les valeurs à passer
     const contact = {
       firstName: document.getElementById("firstName").value,
       lastName: document.getElementById("lastName").value,
@@ -350,11 +349,14 @@ function beforeOrder() {
       city: document.getElementById("city").value,
       email: document.getElementById("email").value,
     };
-    console.log(contact);
-    // Etape 2 : récupérer des id seules
+    // console.log(contact);
+
+    // 7.3.2 : récupérer des id seules
     const products = nullOrMore.map((el) => el.id);
-    console.log(products);
-    // Etape 3 : le fetch post pour envoyer sur la page confirmtion
+    // console.log(products);
+
+    // 7.3.3 : le fetch post pour envoyerle numéro de commande
+    // sur la page confirmation
     fetch(urlOrigin + "/order", {
       method: "POST",
       headers: {
