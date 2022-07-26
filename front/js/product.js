@@ -54,7 +54,7 @@ fetch(urlChoice)
                                         </div>
                                    </div>
                                     <div class="item__content__addButton">
-                                        <a href="./cart.html"> <button id="addToCart">Ajouter au panier</button></a>                                        
+                                      <button id="addToCart">Ajouter au panier</button>                                                                           
                                     </div>
                               </div>`;
 
@@ -71,14 +71,24 @@ fetch(urlChoice)
 
     const addMyCouch = document.getElementById("addToCart");
     addMyCouch.addEventListener("click", () => {
-      let quantityValue = parseInt(document.getElementById("quantity").value);
       let colorsValue = document.getElementById("colors").value;
+      if (!colorsValue) {
+        alert("N'oubliez pas de choisir votre coloris, SVP. Merci :)");
+        return false;
+      }
+      let quantityValue = parseInt(document.getElementById("quantity").value);
+      if (quantityValue < 1 || quantityValue > 100) {
+        alert("Une quantité valide entre 1 et 100, SVP. Merci :)");
+        return false;
+      }
+      if (colorsValue && quantityValue) {
+        window.location.href = "./cart.html";
+      }
       const product = {
         id: myChoice._id,
         quantity: quantityValue,
         color: colorsValue,
       };
-
       // création d'un tableau pour le localstorage. C'est une paire clé/valeur
       // partie 1 : la clé
       let nullOrMore = JSON.parse(localStorage.getItem("basket"));

@@ -179,7 +179,7 @@ console	  target		value soit (e.target.value)*/
 
 // étape 7 retrouver dans un formulaire
 // 7.1 les regex
-const regexName = /^(.*[A-Za-z.*à.*é.*è.*ù.*ï.*ë])$/;
+const regexName = /^[^@&"().,!_$*%€£`+=\/;?#\d]+$/;
 const regexAddress = /^(.*[A-Za-z0-9.*à.*é.*è.*ù.*ï.*ë]+)$/;
 const regexCity = /^(\d{5})(.*[A-Za-z0-9.*à.*é.*è.*ù.*ï.*ë])$/;
 const regexEmail = /^(\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b)$/;
@@ -249,7 +249,7 @@ function verifyAddress() {
     if (address.match(regexAddress)) {
       addressComment.innerHTML = "";
     } else {
-      addressComment.innerHTML = `N'oubliez pas d'écrire une adresse postale! Merci`;
+      addressComment.innerHTML = `N'oubliez pas d'écrire une adresse postale! Merci :)`;
     }
   });
 }
@@ -336,7 +336,6 @@ function beforeOrder() {
     function beforeConfirmation() {
       for (let i = 0; i < nullOrMore.length; i++) {
         const table = nullOrMore[i].id;
-        console.log(table);
       }
     }
 
