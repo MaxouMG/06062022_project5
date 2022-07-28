@@ -354,7 +354,7 @@ function beforeOrder() {
     const products = nullOrMore.map((el) => el.id);
     // console.log(products);
 
-    // 7.3.3 : le fetch post pour envoyerle numéro de commande
+    // 7.3.3 : le fetch post pour envoyer le numéro de commande
     // sur la page confirmation
     fetch(urlOrigin + "/order", {
       method: "POST",

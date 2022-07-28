@@ -77,10 +77,12 @@ fetch(urlChoice)
         return false;
       }
       let quantityValue = parseInt(document.getElementById("quantity").value);
-      if (quantityValue < 1 || quantityValue > 100) {
+      if (!quantityValue || quantityValue < 1 || quantityValue > 100) {
         alert("Une quantité valide entre 1 et 100, SVP. Merci :)");
         return false;
       }
+
+      // se rendre à telle page du site
       if (colorsValue && quantityValue) {
         window.location.href = "./cart.html";
       }
@@ -93,8 +95,8 @@ fetch(urlChoice)
       // partie 1 : la clé
       let nullOrMore = JSON.parse(localStorage.getItem("basket"));
 
+      // gestion des doublons la même id et la même couleur
       if (nullOrMore) {
-        // gestion des doublons la même id et la même couleur
         const sameProduct = nullOrMore.find(
           (el) => el.id === myChoice._id && el.color === colorsValue
         );
